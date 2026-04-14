@@ -128,5 +128,3 @@ Yang diharapkan:
 - Jika ingin pengembangan lanjut, Anda bisa menambahkan:
   - potensiometer virtual sebagai input setpoint,
   - mode autotune yang lebih formal (misalnya pendekatan Ziegler-Nichols berbasis eksperimen osilasi).
-# otomasi-sistem-wokwi
-# otomasi-sistem-wokwi
