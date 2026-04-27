@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "author": "Smart Flood Control - Self-Tuning PID",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "id": "esp",
+      "type": "wokwi-esp32-devkit-v1",
+      "top": 180,
+      "left": 320,
+      "attrs": {}
+    },
+    {
+      "id": "lcd",
+      "type": "wokwi-lcd1602",
+      "top": 0,
+      "left": 220,
+      "attrs": {
+        "i2cAddress": "0x27",
+        "pins": "i2c"
+      }
+    },
+    {
+      "id": "pot",
+      "type": "wokwi-potentiometer",
+      "top": 20,
+      "left": 530,
+      "attrs": {
+        "label": "LEVEL AIR SUNGAI"
+      }
+    },
+    {
+      "id": "motor",
+      "type": "wokwi-dc-motor",
+      "top": 20,
+      "left": 680,
+      "attrs": {
+        "label": "POMPA AIR"
+      }
+    },
+    {
+      "id": "l298n",
+      "type": "wokwi-l298n",
+      "top": 140,
+      "left": 660,
+      "attrs": {}
+    },
+    {
+      "id": "led_green",
+      "type": "wokwi-led",
+      "top": 380,
+      "left": 160,
+      "attrs": {
+        "color": "green",
+        "label": "AMAN"
+      }
+    },
+    {
+      "id": "led_yellow",
+      "type": "wokwi-led",
+      "top": 420,
+      "left": 160,
+      "attrs": {
+        "color": "yellow",
+        "label": "WASPADA"
+      }
+    },
+    {
+      "id": "led_red",
+      "type": "wokwi-led",
+      "top": 460,
+      "left": 160,
+      "attrs": {
+        "color": "red",
+        "label": "BAHAYA"
+      }
+    },
+    {
+      "id": "r_green",
+      "type": "wokwi-resistor",
+      "top": 380,
+      "left": 100,
+      "attrs": { "value": "220" }
+    },
+    {
+      "id": "r_yellow",
+      "type": "wokwi-resistor",
+      "top": 420,
+      "left": 100,
+      "attrs": { "value": "220" }
+    },
+    {
+      "id": "r_red",
+      "type": "wokwi-resistor",
+      "top": 460,
+      "left": 100,
+      "attrs": { "value": "220" }
+    },
+    {
+      "id": "buzzer",
+      "type": "wokwi-buzzer",
+      "top": 500,
+      "left": 160,
+      "attrs": {
+        "label": "ALARM BANJIR"
+      }
+    },
+    {
+      "id": "vcc",
+      "type": "wokwi-vcc",
+      "top": 560,
+      "left": 320,
+      "attrs": {}
+    },
+    {
+      "id": "gnd",
+      "type": "wokwi-gnd",
+      "top": 600,
+      "left": 320,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    ["esp:GND.1", "gnd:GND", "black", ["v0"]],
+    ["esp:3V3", "vcc:VCC", "red", ["v0"]],
+
+    ["lcd:GND", "gnd:GND", "black", ["v0"]],
+    ["lcd:VCC", "vcc:VCC", "red", ["v0"]],
+    ["lcd:SDA", "esp:D21", "blue", ["v0"]],
+    ["lcd:SCL", "esp:D22", "yellow", ["v0"]],
+
+    ["pot:GND", "gnd:GND", "black", ["v0"]],
+    ["pot:VCC", "vcc:VCC", "red", ["v0"]],
+    ["pot:SIG", "esp:D34", "orange", ["v0"]],
+
+    ["l298n:ENA", "esp:D27", "purple", ["v0"]],
+    ["l298n:IN1", "esp:D25", "green", ["v0"]],
+    ["l298n:IN2", "esp:D26", "blue", ["v0"]],
+    ["l298n:VCC", "vcc:VCC", "red", ["v0"]],
+    ["l298n:GND", "gnd:GND", "black", ["v0"]],
+    ["l298n:OUT1", "motor:A", "green", ["v0"]],
+    ["l298n:OUT2", "motor:B", "blue", ["v0"]],
+
+    ["r_green:2", "led_green:A", "green", ["v0"]],
+    ["r_green:1", "esp:D32", "green", ["v0"]],
+    ["led_green:K", "gnd:GND", "black", ["v0"]],
+
+    ["r_yellow:2", "led_yellow:A", "yellow", ["v0"]],
+    ["r_yellow:1", "esp:D33", "yellow", ["v0"]],
+    ["led_yellow:K", "gnd:GND", "black", ["v0"]],
+
+    ["r_red:2", "led_red:A", "red", ["v0"]],
+    ["r_red:1", "esp:D4", "red", ["v0"]],
+    ["led_red:K", "gnd:GND", "black", ["v0"]],
+
+    ["buzzer:1", "esp:D2", "brown", ["v0"]],
+    ["buzzer:2", "gnd:GND", "black", ["v0"]]
+  ],
+  "dependencies": {
+    "wokwi-library-LiquidCrystal_I2C": "1.1.2"
+  }
+}

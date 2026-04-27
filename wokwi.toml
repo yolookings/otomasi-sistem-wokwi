@@ -1,0 +1,5 @@
+[wokwi]
+version = 1
+firmware = "build/wokwi_tmp_sketch.ino.bin"
+elf = "build/wokwi_tmp_sketch.ino.elf"
+gdbServerPort = 3333
