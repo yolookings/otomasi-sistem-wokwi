@@ -1,0 +1,446 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg-main: #f4f7fb;
+  --bg-card: #ffffff;
+  --bg-soft: #f2f5fa;
+  --text-main: #162033;
+  --text-muted: #5f6b7d;
+  --border-soft: #dce3ef;
+  --blue: #378add;
+  --green: #639922;
+  --orange: #ef9f27;
+  --red: #e24b4a;
+}
+body {
+  font-family: var(--font-sans, "Inter", "Segoe UI", Arial, sans-serif);
+  color: var(--color-text-primary, var(--text-main));
+  background:
+    radial-gradient(circle at 5% 10%, rgba(55,138,221,0.10), transparent 38%),
+    radial-gradient(circle at 95% 0%, rgba(99,153,34,0.10), transparent 35%),
+    var(--color-background-primary, var(--bg-main));
+  min-height: 100vh;
+}
+.dash {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+.title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(99,153,34,0.22);
+  background: rgba(99,153,34,0.12);
+  color: #2d6b17;
+}
+.badge.danger {
+  border-color: rgba(226,75,74,0.25);
+  background: rgba(226,75,74,0.15);
+  color: #9e2322;
+}
+.badge.warn {
+  border-color: rgba(239,159,39,0.25);
+  background: rgba(239,159,39,0.15);
+  color: #9a620d;
+}
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1rem; }
+.metric {
+  background: linear-gradient(180deg, #ffffff, #f8fafe);
+  border: 1px solid var(--color-border-tertiary, var(--border-soft));
+  border-radius: var(--border-radius-md, 12px);
+  padding: 0.85rem 1rem;
+  box-shadow: 0 8px 22px rgba(16, 24, 40, 0.05);
+}
+.metric .label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; letter-spacing: 0.04em; }
+.metric .value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.metric .unit { font-size: 12px; color: var(--color-text-secondary); }
+.panel { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+.card {
+  background: var(--color-background-primary, var(--bg-card));
+  border: 1px solid var(--color-border-tertiary, var(--border-soft));
+  border-radius: var(--border-radius-lg, 14px);
+  padding: 1rem;
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.06);
+}
+.card h3 { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.75rem; letter-spacing: 0.05em; }
+.slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
+.slider-row label { font-size: 12px; color: var(--color-text-secondary); min-width: 80px; }
+.slider-row input[type=range] { flex: 1; }
+.slider-row .val { font-size: 13px; font-weight: 500; min-width: 40px; text-align: right; }
+.water-visual {
+  position: relative;
+  height: 120px;
+  border-radius: 10px;
+  background: var(--color-background-secondary, var(--bg-soft));
+  overflow: hidden;
+  border: 1px solid var(--color-border-tertiary, var(--border-soft));
+}
+.water-fill { position: absolute; bottom: 0; left: 0; right: 0; transition: height 0.4s ease, background 0.4s ease; border-radius: 0 0 7px 7px; }
+.water-label { position: absolute; top: 8px; left: 10px; font-size: 12px; color: var(--color-text-secondary); }
+.water-pct { position: absolute; bottom: 8px; right: 10px; font-size: 15px; font-weight: 500; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+.setline { position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(255,255,255,0.6); }
+.setline-label { position: absolute; right: 8px; font-size: 10px; color: rgba(255,255,255,0.8); }
+.motor-vis { display: flex; align-items: center; justify-content: center; height: 120px; flex-direction: column; gap: 8px; }
+.pump-icon { font-size: 36px; transition: transform 0.3s ease; }
+.pump-bar { width: 100%; background: var(--color-background-secondary); border-radius: 4px; height: 8px; overflow: hidden; }
+.pump-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease, background 0.4s ease; }
+.pid-row { display: flex; gap: 8px; }
+.pid-box { flex: 1; background: var(--color-background-secondary); border-radius: 6px; padding: 8px 10px; text-align: center; }
+.pid-box .pl { font-size: 10px; color: var(--color-text-secondary); }
+.pid-box .pv { font-size: 16px; font-weight: 500; }
+.chart-wrap { position: relative; width: 100%; height: 180px; }
+.log {
+  background: var(--color-background-secondary, var(--bg-soft));
+  border: 1px solid var(--color-border-tertiary, var(--border-soft));
+  border-radius: var(--border-radius-md, 10px);
+  padding: 0.75rem;
+  font-size: 11px;
+  font-family: var(--font-mono, "SFMono-Regular", Consolas, Menlo, monospace);
+  color: var(--color-text-secondary);
+  height: 90px;
+  overflow-y: auto;
+}
+.log .entry { margin-bottom: 2px; }
+.log .ts { color: var(--color-text-tertiary); }
+.btn-row { display: flex; gap: 8px; margin-top: 0.75rem; }
+button {
+  font-size: 12px;
+  padding: 7px 14px;
+  border-radius: var(--border-radius-md, 10px);
+  border: 1px solid var(--color-border-secondary, var(--border-soft));
+  background: rgba(255,255,255,0.85);
+  cursor: pointer;
+  color: var(--color-text-primary, var(--text-main));
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+button:hover {
+  background: var(--color-background-secondary, var(--bg-soft));
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.12);
+  transform: translateY(-1px);
+}
+button.accent {
+  background: linear-gradient(180deg, #4ea0ea, #2f7fca);
+  color: #ffffff;
+  border-color: #2f7fca;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(55,138,221,0.28), rgba(99,153,34,0.28));
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #378add;
+  box-shadow: 0 2px 10px rgba(55,138,221,0.35);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #378add;
+  box-shadow: 0 2px 10px rgba(55,138,221,0.35);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 960px) {
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .panel { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .dash { padding: 0.8rem; }
+  .metrics { grid-template-columns: 1fr; }
+  .btn-row { flex-wrap: wrap; }
+  .slider-row label { min-width: 72px; }
+}
+</style>
+
+<div class="dash">
+  <h2 class="sr-only">Smart Flood Control - Dashboard Monitoring Simulasi PID</h2>
+
+  <div class="title-row">
+    <div style="font-size:15px; font-weight:500;">Smart Flood Control</div>
+    <span class="badge" id="status-badge">AMAN</span>
+    <span style="font-size:12px; color:var(--color-text-tertiary); margin-left:auto;" id="clock">00:00</span>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="label">LEVEL AIR</div>
+      <div class="value" id="m-level">0</div>
+      <div class="unit">%</div>
+    </div>
+    <div class="metric">
+      <div class="label">KECEPATAN POMPA</div>
+      <div class="value" id="m-pump">0</div>
+      <div class="unit">%</div>
+    </div>
+    <div class="metric">
+      <div class="label">ERROR PID</div>
+      <div class="value" id="m-err">0.0</div>
+      <div class="unit">Δ%</div>
+    </div>
+    <div class="metric">
+      <div class="label">OUTPUT PID</div>
+      <div class="value" id="m-out">0</div>
+      <div class="unit">/ 255</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="card">
+      <h3>SIMULASI LEVEL AIR SUNGAI</h3>
+      <div class="slider-row" style="margin-bottom:10px;">
+        <label>Level Air</label>
+        <input type="range" id="sl-water" min="0" max="100" value="15" step="1">
+        <span class="val" id="sl-water-val">15%</span>
+      </div>
+      <div class="water-visual">
+        <div class="water-label">Sungai</div>
+        <div class="water-fill" id="water-fill"></div>
+        <div class="setline" id="setline" style="bottom:25%;">
+          <span class="setline-label" style="top:-14px;">setpoint 25%</span>
+        </div>
+        <div class="water-pct" id="water-pct">15%</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>STATUS POMPA AIR (MOTOR DC)</h3>
+      <div class="motor-vis">
+        <div class="pump-icon" id="pump-icon">⚙</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">Kecepatan Pompa</div>
+        <div class="pump-bar" style="width:80%;">
+          <div class="pump-fill" id="pump-fill" style="width:0%;background:#3266ad;"></div>
+        </div>
+        <div style="font-size:18px; font-weight:500;" id="pump-label">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <h3>PARAMETER PID (SELF-TUNING)</h3>
+    <div class="slider-row">
+      <label>Kp (Prop)</label>
+      <input type="range" id="sl-kp" min="0.1" max="10" step="0.1" value="2.5">
+      <span class="val" id="sl-kp-val">2.5</span>
+    </div>
+    <div class="slider-row">
+      <label>Ki (Integ)</label>
+      <input type="range" id="sl-ki" min="0.01" max="5" step="0.01" value="0.8">
+      <span class="val" id="sl-ki-val">0.80</span>
+    </div>
+    <div class="slider-row">
+      <label>Kd (Deriv)</label>
+      <input type="range" id="sl-kd" min="0.001" max="3" step="0.001" value="0.3">
+      <span class="val" id="sl-kd-val">0.300</span>
+    </div>
+    <div class="pid-row" style="margin-top:10px;">
+      <div class="pid-box"><div class="pl">P-term</div><div class="pv" id="p-term">0.00</div></div>
+      <div class="pid-box"><div class="pl">I-term</div><div class="pv" id="i-term">0.00</div></div>
+      <div class="pid-box"><div class="pl">D-term</div><div class="pv" id="d-term">0.00</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="accent" onclick="doAutoTune()">Auto-Tune PID ↗</button>
+      <button onclick="resetPID()">Reset Default</button>
+      <button onclick="doScenario()">Simulasi Banjir ↗</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>GRAFIK REAL-TIME — LEVEL AIR & POMPA</h3>
+    <div class="chart-wrap">
+      <canvas id="rtChart" role="img" aria-label="Grafik level air sungai dan kecepatan pompa secara real-time">Level air dan kecepatan pompa dipantau setiap detik.</canvas>
+    </div>
+    <div class="log" id="log"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const MAX_PTS = 40;
+const labels = [];
+const dataLevel = [];
+const dataPump  = [];
+
+let Kp = 2.5, Ki = 0.8, Kd = 0.3;
+let errSum = 0, lastErr = 0;
+let targetLevel = 15;
+let currentLevel = 0;
+let tick = 0;
+let autoTuning = false, atTick = 0;
+
+const SETPOINT = 25;
+const DT = 0.1;
+
+const slWater  = document.getElementById('sl-water');
+const slKp     = document.getElementById('sl-kp');
+const slKi     = document.getElementById('sl-ki');
+const slKd     = document.getElementById('sl-kd');
+
+slWater.addEventListener('input', () => {
+  targetLevel = +slWater.value;
+  document.getElementById('sl-water-val').textContent = targetLevel + '%';
+});
+slKp.addEventListener('input', () => { Kp = +slKp.value; document.getElementById('sl-kp-val').textContent = Kp.toFixed(1); });
+slKi.addEventListener('input', () => { Ki = +slKi.value; document.getElementById('sl-ki-val').textContent = Ki.toFixed(2); });
+slKd.addEventListener('input', () => { Kd = +slKd.value; document.getElementById('sl-kd-val').textContent = Kd.toFixed(3); });
+
+const ctx = document.getElementById('rtChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      { label: 'Level Air (%)', data: dataLevel, borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.08)', tension: 0.4, pointRadius: 0, borderWidth: 2, fill: true },
+      { label: 'Pompa (%)', data: dataPump, borderColor: '#639922', backgroundColor: 'rgba(99,153,34,0.08)', tension: 0.4, pointRadius: 0, borderWidth: 2, borderDash: [5,3], fill: true }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, animation: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#888', maxTicksLimit: 8 } },
+      y: { min: 0, max: 100, grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 10 }, color: '#888', callback: v => v + '%' } }
+    }
+  }
+});
+
+function computePID(level) {
+  const err = level - SETPOINT;
+  if (err <= 0) { errSum = 0; lastErr = err; return 0; }
+  errSum += err * DT;
+  errSum = Math.max(-200, Math.min(200, errSum));
+  const deriv = (err - lastErr) / DT;
+  const out = (Kp * err) + (Ki * errSum) + (Kd * deriv);
+  lastErr = err;
+  return Math.round(Math.max(0, Math.min(255, out)));
+}
+
+function getStatus(level) {
+  if (level < 30) return { text: 'AMAN', cls: '' };
+  if (level < 50) return { text: 'WASPADA', cls: 'warn' };
+  if (level < 70) return { text: 'SIAGA', cls: 'warn' };
+  return { text: 'BAHAYA!', cls: 'danger' };
+}
+
+function getColor(level) {
+  if (level < 30) return '#378ADD';
+  if (level < 50) return '#EF9F27';
+  if (level < 70) return '#D85A30';
+  return '#E24B4A';
+}
+
+function addLog(msg) {
+  const log = document.getElementById('log');
+  const ts  = new Date().toLocaleTimeString('id-ID', { hour12: false, hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  log.innerHTML = `<div class="entry"><span class="ts">[${ts}]</span> ${msg}</div>` + log.innerHTML;
+}
+
+function resetPID() {
+  Kp = 2.5; Ki = 0.8; Kd = 0.3; errSum = 0; lastErr = 0;
+  slKp.value = Kp; document.getElementById('sl-kp-val').textContent = Kp.toFixed(1);
+  slKi.value = Ki; document.getElementById('sl-ki-val').textContent = Ki.toFixed(2);
+  slKd.value = Kd; document.getElementById('sl-kd-val').textContent = Kd.toFixed(3);
+  addLog('PID direset ke default: Kp=2.5 Ki=0.8 Kd=0.3');
+}
+
+function doAutoTune() {
+  sendPrompt('Jelaskan cara kerja Auto-Tune PID dengan metode relay (Ziegler-Nichols) pada sistem pompa banjir ini secara detail');
+}
+
+function doScenario() {
+  addLog('Simulasi banjir dimulai — level naik ke 85%!');
+  let t = 0;
+  const iv = setInterval(() => {
+    t++;
+    const v = Math.min(85, 15 + t * 5);
+    slWater.value = v;
+    targetLevel = v;
+    document.getElementById('sl-water-val').textContent = v + '%';
+    if (v >= 85) clearInterval(iv);
+  }, 150);
+}
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('id-ID', { hour12: false });
+}
+
+setInterval(() => {
+  tick++;
+  currentLevel += (targetLevel - currentLevel) * 0.15;
+
+  const pidOut  = computePID(currentLevel);
+  const pumpPct = Math.round((pidOut / 255) * 100);
+  const err     = currentLevel - SETPOINT;
+
+  const pTerm = Kp * err;
+  const iTerm = Ki * errSum;
+  const dTerm = Kd * (err - lastErr) / DT;
+
+  document.getElementById('m-level').textContent = currentLevel.toFixed(1);
+  document.getElementById('m-pump').textContent  = pumpPct;
+  document.getElementById('m-err').textContent   = err.toFixed(1);
+  document.getElementById('m-out').textContent   = pidOut;
+  document.getElementById('p-term').textContent  = pTerm.toFixed(2);
+  document.getElementById('i-term').textContent  = iTerm.toFixed(2);
+  document.getElementById('d-term').textContent  = dTerm.toFixed(2);
+
+  const wf    = document.getElementById('water-fill');
+  const color = getColor(currentLevel);
+  wf.style.height     = currentLevel + '%';
+  wf.style.background = color + '99';
+  document.getElementById('water-pct').textContent = currentLevel.toFixed(0) + '%';
+
+  const pf = document.getElementById('pump-fill');
+  pf.style.width      = pumpPct + '%';
+  pf.style.background = pumpPct > 70 ? '#E24B4A' : pumpPct > 40 ? '#EF9F27' : '#639922';
+  document.getElementById('pump-label').textContent = pumpPct + '%';
+
+  const pumpIcon = document.getElementById('pump-icon');
+  if (pumpPct > 0) {
+    const deg = (tick * pumpPct * 0.1) % 360;
+    pumpIcon.style.transform = `rotate(${deg}deg)`;
+  }
+
+  const st = getStatus(currentLevel);
+  const badge = document.getElementById('status-badge');
+  badge.textContent = st.text;
+  badge.className   = 'badge ' + st.cls;
+
+  const label = `${tick}s`;
+  labels.push(label);
+  dataLevel.push(+currentLevel.toFixed(1));
+  dataPump.push(pumpPct);
+  if (labels.length > MAX_PTS) { labels.shift(); dataLevel.shift(); dataPump.shift(); }
+  chart.update('none');
+
+  updateClock();
+
+  if (tick % 10 === 0) {
+    addLog(`Lvl:${currentLevel.toFixed(1)}% | Pompa:${pumpPct}% | PWM:${pidOut} | Kp:${Kp.toFixed(2)} Ki:${Ki.toFixed(2)} Kd:${Kd.toFixed(2)} | ${st.text}`);
+  }
+}, 400);
+</script>
