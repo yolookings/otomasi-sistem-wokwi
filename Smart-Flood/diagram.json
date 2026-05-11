@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "author": "Nabiel - Tim Otomasi Sistem",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic", "top": -150, "left": 280, "attrs": { "distance": "100" } },
+    { "type": "board-ssd1306", "id": "oled", "top": 60, "left": -280, "attrs": {} },
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": -120, "left": -180, "attrs": {} },
+    { "type": "wokwi-pushbutton", "id": "btn_tune", "top": -10, "left": -180, "attrs": { "color": "red", "label": "TUNE" } },
+    { "type": "wokwi-resistor", "id": "resistor", "top": 60, "left": 200, "attrs": { "value": "220" } },
+    { "type": "wokwi-led", "id": "led_pompa", "top": 50, "left": 280, "attrs": { "color": "blue" } }
+  ],
+  "connections": [
+    [ "esp:VIN", "ultrasonic:VCC", "red", [] ],
+    [ "esp:GND.2", "ultrasonic:GND", "black", [] ],
+    [ "esp:D5", "ultrasonic:TRIG", "green", [] ],
+    [ "esp:D18", "ultrasonic:ECHO", "yellow", [] ],
+    
+    [ "esp:3V3", "oled:VCC", "red", [] ],
+    [ "esp:GND.1", "oled:GND", "black", [] ],
+    [ "esp:D22", "oled:SCL", "cyan", [] ],
+    [ "esp:D21", "oled:SDA", "magenta", [] ],
+    
+    [ "esp:D4", "buzzer:2", "orange", [] ],
+    [ "esp:GND.1", "buzzer:1", "black", [] ],
+    
+    [ "esp:D15", "btn_tune:1.l", "purple", [] ],
+    [ "esp:GND.1", "btn_tune:2.l", "black", [] ],
+
+    [ "esp:D19", "resistor:1", "blue", [] ],
+    [ "resistor:2", "led_pompa:A", "blue", [] ],
+    [ "esp:GND.2", "led_pompa:C", "black", [] ]
+  ]
+}
