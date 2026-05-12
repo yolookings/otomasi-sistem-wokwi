@@ -4,32 +4,53 @@
   "editor": "wokwi",
   "parts": [
     { "type": "board-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
-    { "type": "wokwi-hc-sr04", "id": "ultrasonic", "top": -150, "left": 280, "attrs": { "distance": "100" } },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "ultrasonic",
+      "top": -150,
+      "left": 280,
+      "attrs": { "distance": "100" }
+    },
     { "type": "board-ssd1306", "id": "oled", "top": 60, "left": -280, "attrs": {} },
-    { "type": "wokwi-buzzer", "id": "buzzer", "top": -120, "left": -180, "attrs": {} },
-    { "type": "wokwi-pushbutton", "id": "btn_tune", "top": -10, "left": -180, "attrs": { "color": "red", "label": "TUNE" } },
-    { "type": "wokwi-resistor", "id": "resistor", "top": 60, "left": 200, "attrs": { "value": "220" } },
-    { "type": "wokwi-led", "id": "led_pompa", "top": 50, "left": 280, "attrs": { "color": "blue" } }
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": -237.6, "left": -180.6, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_tune",
+      "top": 6.2,
+      "left": -105.6,
+      "attrs": { "color": "red", "label": "TUNE" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "resistor",
+      "top": 61.55,
+      "left": 153.6,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_pompa",
+      "top": -32.4,
+      "left": 205.8,
+      "attrs": { "color": "blue", "flip": "1" }
+    }
   ],
   "connections": [
-    [ "esp:VIN", "ultrasonic:VCC", "red", [] ],
-    [ "esp:GND.2", "ultrasonic:GND", "black", [] ],
+    [ "esp:VIN", "ultrasonic:VCC", "red", [ "h-33.6", "v64.48", "h380.1" ] ],
+    [ "esp:GND.1", "ultrasonic:GND", "black", [ "h52.31", "v-2.72", "h227.7" ] ],
     [ "esp:D5", "ultrasonic:TRIG", "green", [] ],
     [ "esp:D18", "ultrasonic:ECHO", "yellow", [] ],
-    
-    [ "esp:3V3", "oled:VCC", "red", [] ],
-    [ "esp:GND.1", "oled:GND", "black", [] ],
-    [ "esp:D22", "oled:SCL", "cyan", [] ],
-    [ "esp:D21", "oled:SDA", "magenta", [] ],
-    
+    [ "esp:3V3", "oled:VCC", "red", [ "h33.11", "v-213.92", "h-366.78" ] ],
+    [ "esp:GND.2", "oled:GND", "black", [ "h-129.6", "v-98.72", "h-117.03" ] ],
+    [ "esp:D22", "oled:SCL", "cyan", [ "h13.91", "v-60.32", "h-338.13" ] ],
+    [ "esp:D21", "oled:SDA", "magenta", [ "h23.51", "v-98.72", "h-337.9" ] ],
     [ "esp:D4", "buzzer:2", "orange", [] ],
-    [ "esp:GND.1", "buzzer:1", "black", [] ],
-    
-    [ "esp:D15", "btn_tune:1.l", "purple", [] ],
-    [ "esp:GND.1", "btn_tune:2.l", "black", [] ],
-
+    [ "esp:GND.2", "buzzer:1", "black", [ "v-2.72", "h-157.8" ] ],
+    [ "esp:D15", "btn_tune:1.l", "purple", [ "h42.71", "v-204.32", "h-268.8" ] ],
     [ "esp:D19", "resistor:1", "blue", [] ],
-    [ "resistor:2", "led_pompa:A", "blue", [] ],
-    [ "esp:GND.2", "led_pompa:C", "black", [] ]
-  ]
+    [ "resistor:2", "led_pompa:A", "blue", [ "h8.4", "v-28.8", "h-0.4" ] ],
+    [ "esp:GND.1", "led_pompa:C", "black", [ "h52.31", "v-31.52", "h76.8" ] ],
+    [ "esp:GND.2", "btn_tune:2.l", "black", [ "h0" ] ]
+  ],
+  "dependencies": {}
 }
